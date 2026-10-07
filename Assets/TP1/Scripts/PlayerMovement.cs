@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -5,26 +6,48 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Configuración de Movimiento")] 
     [SerializeField] private float speed = 5.0f;
-    
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] private float rotationSpeed = 720.0f;
+    [Header("Referencias")]
+    [SerializeField] private Rigidbody rb;
+    [SerializeField] private Animator anim;
+    private Vector3 movementInput;
+    private void Start()
     {
-        
+        //obtiene referencias de los componentes Rigidbody y Animator si no se han asignado en el Inspector
+        if (rb == null)
+        {
+            rb = GetComponent<Rigidbody>();
+        }
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        float horizontal = Input.GetAxisRaw("Horizontal"); 
-        float vertical = Input.GetAxisRaw("Vertical");
+       float horizontalInput = Input.GetAxis("Horizontal");
+       float verticalInput = Input.GetAxis("Vertical");
+        movementInput = new Vector3(horizontalInput, 0f, verticalInput).normalized;
 
-        Vector3 direction = new Vector3(horizontal, 0f, vertical);
-        if (direction.magnitude > 0.1f)
+        if (anim != null)
         {
-            direction.Normalize();
+            anim.SetBool("isWalking", movementInput.magnitude > 0.1f);
         }
-        Vector3 displacement = direction * speed * Time.deltaTime;
-        transform.Translate(displacement, Space.World);
+    }
+    private void FixedUpdate()
+    {
+        if (movementInput.magnitude > 0.1f)
+        {
+            // Movimiento del jugador
+            Vector3 movement = movementInput * speed;
+            rb.linearVelocity = new Vector3(movement.x, rb.linearVelocity.y, movement.z);
+
+            // Rotación del jugador hacia la dirección del movimiento
+            Quaternion targetRotation = Quaternion.LookRotation(movementInput);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
+        }
+        else 
+        {
+           rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
+        }
     }
 }
 
