@@ -20,7 +20,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
+    //Update is called once per frame
     private void Update()
     {
        float horizontalInput = Input.GetAxis("Horizontal");
@@ -36,11 +36,11 @@ public class PlayerMovement : MonoBehaviour
     {
         if (movementInput.magnitude > 0.1f)
         {
-            // Movimiento del jugador
+            //Movimiento del jugador
             Vector3 movement = movementInput * speed;
             rb.linearVelocity = new Vector3(movement.x, rb.linearVelocity.y, movement.z);
 
-            // Rotación del jugador hacia la dirección del movimiento
+            //Rotación del jugador hacia la dirección del movimiento
             Quaternion targetRotation = Quaternion.LookRotation(movementInput);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
         }
