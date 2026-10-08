@@ -14,7 +14,28 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Camera gameCamera; // Tu cámara activa
 
     private Vector3 movementInput;
+    private Coroutine speedBoostCoroutine;
 
+    //metodo que invoca el Power-Up
+    public void ApplySpeedBoost(float multiplier, float duration)
+    {
+        if (speedBoostCoroutine != null)
+        {
+            StopCoroutine(speedBoostCoroutine);
+        }
+        speedBoostCoroutine = StartCoroutine(SpeedBoostRoutine(multiplier, duration));
+    }
+
+    private System.Collections.IEnumerator SpeedBoostRoutine(float multiplier, float duration)
+    {
+        float originalSpeed = speed; //guarda velocidad original
+        speed *= multiplier;         //aumenta la velocidad
+
+        yield return new WaitForSeconds(duration);
+
+        speed = originalSpeed;       //restaura valor original
+        speedBoostCoroutine = null;
+    }
     private void Start()
     {
         if (rb == null) rb = GetComponent<Rigidbody>();
