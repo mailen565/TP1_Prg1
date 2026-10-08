@@ -14,6 +14,7 @@ public class MovingPlatform : MonoBehaviour
     private bool Vent = false;
     private bool goingToB = true;
 
+
     private void Start()
     {
         Vector3 posA = (pointA != null) ? pointA.position : transform.position;
@@ -22,6 +23,7 @@ public class MovingPlatform : MonoBehaviour
     }
     private void Update()
     {
+        
         //si está esperando mediante Invoke, no se desplaza
         if (Vent || pointA == null || pointB == null) return;
 
@@ -45,19 +47,18 @@ public class MovingPlatform : MonoBehaviour
         Vent = false;
 
     }
-    //asegura que el personaje no se deslice ni se caiga al viajar sobre la plataforma
-    private void OnCollisionEnter(Collision collision)
+    //cuando el personaje entra en contacto con la plataforma, se establece una relación de padre-hijo para que se mueva junto con ella
+   private void OnCollisionEnter(Collision collision)
     {
-        //cuando el personaje entra en contacto con la plataforma, se establece una relación de padre-hijo para que se mueva junto con ella
-        if (collision.gameObject.CompareTag("Player")|| collision.transform.root.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player") || collision.transform.root.CompareTag("Player"))
         {
             collision.transform.root.SetParent(transform);
         }
     }
+
     private void OnCollisionExit(Collision collision)
     {
-        //cuando el personaje deja de estar en contacto con la plataforma, se elimina la relación de padre-hijo
-        if (collision.gameObject.CompareTag("Player")|| collision.transform.root.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player") || collision.transform.root.CompareTag("Player"))
         {
             collision.transform.root.SetParent(null);
         }

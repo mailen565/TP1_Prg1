@@ -79,11 +79,28 @@ public class PlayerMovement : MonoBehaviour
         {
             if(transform.parent != null)
             {
-                rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
+                rb.linearVelocity = new Vector3(rb.linearVelocity.x,rb.linearVelocity.y, rb.linearVelocity.z);
             }
             else
             {
                 rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
+            }
+        }
+    }
+    private void OnDisable()
+    {
+        // Seguridad: si el objeto se desactiva o reinicia, desvincula al padre
+        transform.SetParent(null);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        // Si el jugador pisa cualquier cosa que NO sea la plataforma móvil, se suelta inmediatamente
+        if (!collision.gameObject.CompareTag("MovingPlatform"))
+        {
+            if (transform.parent != null)
+            {
+                transform.SetParent(null);
             }
         }
     }
