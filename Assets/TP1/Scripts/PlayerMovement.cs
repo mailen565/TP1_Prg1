@@ -68,10 +68,23 @@ public class PlayerMovement : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (rb != null)
+        if (rb == null) return;
+
+        if (movementInput.magnitude > 0.1f)
         {
             Vector3 targetVelocity = movementInput * speed;
             rb.linearVelocity = new Vector3(targetVelocity.x, rb.linearVelocity.y, targetVelocity.z);
+        }
+        else
+        {
+            if(transform.parent != null)
+            {
+                rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
+            }
+            else
+            {
+                rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
+            }
         }
     }
 }

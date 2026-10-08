@@ -48,16 +48,18 @@ public class MovingPlatform : MonoBehaviour
     //asegura que el personaje no se deslice ni se caiga al viajar sobre la plataforma
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        //cuando el personaje entra en contacto con la plataforma, se establece una relación de padre-hijo para que se mueva junto con ella
+        if (collision.gameObject.CompareTag("Player")|| collision.transform.root.CompareTag("Player"))
         {
-            collision.gameObject.transform.SetParent(transform);
+            collision.transform.root.SetParent(transform);
         }
     }
     private void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        //cuando el personaje deja de estar en contacto con la plataforma, se elimina la relación de padre-hijo
+        if (collision.gameObject.CompareTag("Player")|| collision.transform.root.CompareTag("Player"))
         {
-            collision.gameObject.transform.SetParent(null);
+            collision.transform.root.SetParent(null);
         }
     }
 }
