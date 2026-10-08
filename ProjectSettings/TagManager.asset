@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - Chicken
+  - MovingPlatform
   layers:
   - Default
   - TransparentFX

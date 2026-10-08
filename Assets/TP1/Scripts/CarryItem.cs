@@ -91,9 +91,13 @@ public class CarryItem : MonoBehaviour
         //bloquear físicas de la gallina
         if (carriedRb != null)
         {
+            if (!carriedRb.isKinematic)
+            {
+                carriedRb.linearVelocity = Vector3.zero;
+            }
             carriedRb.isKinematic = true;
             carriedRb.useGravity = false;
-            carriedRb.linearVelocity = Vector3.zero;
+            
         }
 
         //emparentar al hocico/boca (HoldPoint)
