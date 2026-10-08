@@ -8,24 +8,22 @@ public class MovingPlatform : MonoBehaviour
 
     [Header("Configuración de Movimiento")]
     [SerializeField] private float speed = 3.0f;
-    [SerializeField] private float waitTime = 2.0f; // Tiempo de espera antes de cambiar de dirección
+    [SerializeField] private float waitTime = 2.0f; //Tiempo de espera antes de cambiar de dirección
 
     private Vector3 currentTarget;
-    private bool isWaiting = false;
+    private bool Vent = false;
+    private bool goingToB = true;
 
     private void Start()
     {
-        //inicia yendo hacia el punto B
-        if (pointB != null)
-        {
-            currentTarget = pointB.position;
-        }
+        Vector3 posA = (pointA != null) ? pointA.position : transform.position;
+        Vector3 posB = (pointB != null) ? pointB.position : transform.position + new Vector3(5f, 0f, 0f); // Si no hay punto B, se mueve 5 unidades a la derecha
+        currentTarget = posB;
     }
-
     private void Update()
     {
         //si está esperando mediante Invoke, no se desplaza
-        if (isWaiting || pointA == null || pointB == null) return;
+        if (Vent || pointA == null || pointB == null) return;
 
         //movimiento continuo hacia el destino actual
         transform.position = Vector3.MoveTowards(transform.position, currentTarget, speed * Time.deltaTime);
@@ -33,7 +31,7 @@ public class MovingPlatform : MonoBehaviour
         //comprueba si llegó a la posición objetivo
         if (Vector3.Distance(transform.position, currentTarget) < 0.05f)
         {
-            isWaiting = true;
+            Vent = true;
             //se utiliza Invoke para temporizar el cambio de dirección según la consigna
             Invoke(nameof(SwitchDirection), waitTime);
         }
@@ -41,18 +39,11 @@ public class MovingPlatform : MonoBehaviour
 
     private void SwitchDirection()
     {
-        //cambia el destino entre el punto A y el punto B
-        if (currentTarget == pointB.position)
-        {
-            currentTarget = pointA.position;
-        }
-        else
-        {
-            currentTarget = pointB.position;
-        }
+        goingToB = !goingToB;
+        currentTarget = goingToB ? pointB.position : pointA.position;
 
-        //permite que vuelva a moverse
-        isWaiting = false;
+        Vent = false;
+
     }
     //asegura que el personaje no se deslice ni se caiga al viajar sobre la plataforma
     private void OnCollisionEnter(Collision collision)
