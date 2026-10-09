@@ -20,7 +20,7 @@ public class TigerObstacle : MonoBehaviour
         if (animator != null)
         {
             //activa el modo de movimiento y la animación de avance hacia adelante
-            animator.SetInteger("State", 1);  //activa el modo de movimiento
+            animator.SetFloat("State", 1);  //activa el modo de movimiento
             animator.SetFloat("Vert", 1f);     //velocidad de avance hacia adelante
         }
     }
